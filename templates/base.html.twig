@@ -1,17 +1,43 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<title>{% block title %}Welcome!{% endblock %}</title>
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+		{% block stylesheets %}{% endblock %}
 
-        {% block javascripts %}
-{% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+		{% block javascripts %}
+			{% block importmap %}{{ importmap('app') }}{% endblock %}
+		{% endblock %}
+	</head>
+	<body>
+		{% block header %}
+			<header>
+			</header>
+		{% endblock %}
+
+		<div class="container">
+			{% block body %}
+				<div class="row">
+					<div class="col-sm-9">
+						{% block main %}{% endblock %}
+					</div>
+					<div class="col-sm-3">
+					</div>
+				</div>
+			{% endblock %}
+		</div>
+
+		{% block footer %}
+			<footer>
+				<div class="container">
+					<div class="row">
+						<div class="col-md-6">
+							<p>&copy; {{ 'now'|date('Y') }} - The Quiz Project</p>
+						</div>
+					</div>
+				</div>
+			</footer>
+		{% endblock %}
+	</body>
 </html>

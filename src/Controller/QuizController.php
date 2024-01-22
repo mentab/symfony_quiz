@@ -15,15 +15,15 @@ class QuizController extends AbstractController
 	#[Route('/show', name: 'show')]
 	public function showQuiz(QuizService $quizService, Request $request): Response
 	{
-		$quiz = $quizService->createQuizFromApi();
+		$session = $request->getSession();
+
+		$quiz = $quizService->createQuiz();
 
 		$form = $this->createForm(QuizType::class, $quiz);
 
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			$this->get('session')->set('quiz', $quiz);
-
 			return $this->redirectToRoute('quiz_results');
 		}
 
@@ -33,11 +33,17 @@ class QuizController extends AbstractController
 	}
 
 	#[Route('/results', name: 'results')]
-	public function quiz(QuizService $quizService): Response
+	public function resultsQuiz(Request $request): Response
 	{
-		$quiz = $this->get('session')->get('quiz');
+		$session = $request->getSession();
 
-		var_dump($quiz);
+		if (!$session->has('quiz')) {
+			return $this->redirectToRoute('quiz_show');
+		}
+
+		$quiz = $session->get('quiz');
+
+		$session->remove('quiz');
 
 		return $this->render('quiz/results.html.twig', [
 			'quiz' => $quiz

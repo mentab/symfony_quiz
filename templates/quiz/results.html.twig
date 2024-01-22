@@ -2,8 +2,18 @@
 
 {% block title %}Quiz{% endblock %}
 
-{% block body %}
+{% block main %}
 
-Results
+	{% for question in quiz.questions %}
+		Type : {{ question.type }}
+		Difficulty : {{ question.difficulty }}
+		Category : {{ question.category }}
+		Question : {{ question.question }}
+		Correct Answer : {{ question.correctAnswer }}
+		Incorrect Answers : {% for incorrectAnswer in question.incorrectAnswers %}
+			{{ incorrectAnswer }}
+		{% endfor %}
+		Your Answer : {{ question.userAnswer }}
+	{% endfor %}
 
 {% endblock %}

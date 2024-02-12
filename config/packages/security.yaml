@@ -4,24 +4,40 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        # used to reload user from session & other features (e.g. switch_user)
+        # app_user_provider:
+        #     entity:
+        #         class: App\Entity\User
+        #         property: email
+        memory_provider:
+            memory:
+                users:
+                    john_admin:
+                        password: '$2y$13$XesgXSkU0E1ylJ2r9Hobr.0nHt1LDdBoRG1Q0w5/Mdk0Y3Qo2YW.2'
+                        roles: ['ROLE_ADMIN']
+                    jane_admin:
+                        password: '$2y$13$V8crtielRqx.U0Tb1I8jNuJD5edvSkcXuluh6xo78D6AmWfhrvaX2'
+                        roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ALLOWED_TO_SWITCH']
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: memory_provider
+            http_basic:
+                realm: Secured Area
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
             # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+            switch_user: true
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: '^/', roles: ROLE_ADMIN }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 

@@ -71,8 +71,10 @@ class Question
 		return $this->userAnswer;
 	}
 
-	public function setUserAnswer(string $userAnswer): void
+	public function setUserAnswer(string $userAnswer): static
 	{
 		$this->userAnswer = $userAnswer;
+
+		return $this;
 	}
 }

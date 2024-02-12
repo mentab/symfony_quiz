@@ -19,8 +19,10 @@ class Quiz
 		return $this->questions;
 	}
 
-	public function addQuestion(Question $question): void
+	public function addQuestion(Question $question): static
 	{
-        $this->questions->add($question);
-    }
+		$this->questions->add($question);
+
+		return $this;
+	}
 }

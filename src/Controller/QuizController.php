@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Service\QuizService;
 use App\Form\QuizType;
 use App\Form\QuizParamsType;
+use App\Entity\Result;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Event\BeforeStartQuizEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/quiz', name: 'quiz_')]
 class QuizController extends AbstractController
@@ -39,7 +41,7 @@ class QuizController extends AbstractController
 	}
 
 	#[Route('/start', name: 'start')]
-	public function start(QuizService $quizService, Request $request): Response
+	public function start(QuizService $quizService, Request $request, EntityManagerInterface $entityManager): Response
 	{
 		$session = $request->getSession();
 
@@ -50,6 +52,13 @@ class QuizController extends AbstractController
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
+			$result = new Result();
+
+			$result->setScore(rand(1, 100));
+
+			$entityManager->persist($result);
+			$entityManager->flush();
+
 			return $this->redirectToRoute('quiz_results');
 		}
 
@@ -64,7 +73,7 @@ class QuizController extends AbstractController
 		$session = $request->getSession();
 
 		if (!$session->has('quiz')) {
-			return $this->redirectToRoute('quiz_show');
+			return $this->redirectToRoute('quiz_home');
 		}
 
 		$quiz = $session->get('quiz');
